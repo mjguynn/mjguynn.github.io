@@ -1,0 +1,86 @@
+:root {
+	--bold-color: #226;
+}
+body {
+	font-family: "Courier New";
+	margin: 20px;
+	height: calc(100vh - 50px);
+}
+.page {
+	max-width: 800px;
+	min-height: 100%;
+	margin: 0 auto;
+	padding: 5px;
+}
+.title {
+	font-size: 2em;
+	font-weight: bold;
+	color: var(--bold-color);
+	text-align: center;
+}
+.title > a {
+	text-decoration: none;
+}
+.articles {
+	padding-left: 25px;
+}
+.subtitle {
+	text-align: left;
+	font-size: 1.5em;
+	font-weight: bold;
+	color: var(--bold-color);
+}
+.content {
+	background-color: #F0F0F4;
+	border-radius: 10px;
+	padding: 20px;
+	border: 1px solid black;
+}
+.content > h1 {
+	text-align: center;
+}
+.content > time {
+	font-size: 1.1em;
+}
+a:hover {
+	color: #47F;
+	transition: 0.1s ease-in;
+}
+header {
+	padding: 17px;
+	background-color: #FFF;
+	border: 3px solid var(--bold-color);
+	border-radius: 10px;
+	margin-bottom: 25px;
+}
+
+blockquote {
+	border-left: 5px solid #CCC;
+	padding-left: 10px;
+	font-family: Tahoma;
+	color: #666;
+}
+figure {
+	margin-top: 40px;
+	margin-bottom: 40px;
+	text-align: center;
+	display: block;
+	font-family: Tahoma;
+	color: #666;
+}
+figure > img {
+	max-width: 400px;
+}
+article > p {
+	padding-left: 30px;
+	padding-right: 30px;
+	font-family: Tahoma;
+	letter-spacing: 0.6px;
+	text-indent: 1em;
+}
+article > p > code {
+	font-size: 1.2em;
+}
+.aside {
+	color: #777;
+}

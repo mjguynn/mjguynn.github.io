@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<head>
+	<title>Block device driver installation</title>
+	<link rel="icon" type="image/png" href="../favicon-32.png">
+	<link rel="stylesheet" type="text/css" href="../styles.css">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Windows keeps reinstalling a bloatware driver? Here's a fix.">
+</head>
+<body>
+	<div class="page">
+		<header>
+			<h1 class="title"><a href="../index.html">mjguynn's blog</a></h1>
+		</header>
+		<article class="content">
+			<h1 class="subtitle">How to <em>actually</em> block device driver installation on Windows</h1>
+			<div style="text-align: center">
+				<time datetime="2022-09-19">September 19, 2022</time>
+			</div>
+			
+			<br>
+			
+			<p>Whenever a new device is detected, Windows "conveniently" installs the manufacturer's drivers for you. </p>
+			<p>
+			<em>Surely</em> there's an easy way to disable this functionality, right? Since, you know, it sure seems like a lot of device drivers only exist to hurl advertisements into your notification tray?
+			</p>
+			<br>
+			<p>...<p>
+			
+			<p>Hahaha, no, it's an <em>absolute nightmare.</em> The actual procedure is pretty simple, but it's buried under a billion different guides and suggestions which don't work. <span class="aside">(And by "don't work", I mean they <em>did</em> work, but now they don't. 🤔)</span> Most guides I've seen use the Group Policy editor to block device driver installation; this is a problem if you're using Windows 10 Home, which doesn't include the Group Policy editor. <span class="aside">Yes, there's a way to install it anyways. No, it doesn't work with driver installation restrictions.</span></p>
+			
+			<p>Here's the one solution that actually worked for me.</p>
+			
+			<p>Open Device Manager and locate the offending device. Right-click on it, then click <code>Properties</code> to open the properties panel. Navigate to the <code>Details</code> tab and select <code>Hardware Ids</code> from the dropdown menu.
+			
+			<figure>
+				<img src="driver-devices.png">
+				<figcaption>The list of hardware IDs. If there are multiple entries, they are listed from top to bottom in decreasing order of specificity.</figcaption>
+			</figure>
+			
+			<p>
+			Copy one of the hardware IDs. I recommend you start with the topmost ID since it's the most specific; that way, if anything goes wrong, the risk of collateral damage is minimized. If it doesn't work you can always try one lower on the list.
+			</p>
+			
+			<p>Now open <code>regedit</code> and navigate to the folder</p>
+			
+			<blockquote>
+			<code>Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeviceInstall\Restrictions\DenyDeviceIDs</code>
+			</blockquote>
+			
+			<p>(If any folder in the path didn't exist, create it.)</p>
+			
+			<p>Registry keys in this folder are a bit peculiar: as far as I'm aware, the keys must start with a key named <code>1</code>, and the rest of the keys should be named in increasing order without skipping any numbers. The actual order of keys is unimportant. The values of these keys are the hardware IDs whose automatic driver installation will be blocked.</p>
+			
+			<p>Add a new key with type <code>REG_SZ</code>. The key name should respect the aformentioned pattern. The key value should be the hardware ID you copied from Device Manager.</p>
+			
+			<figure>
+				<img src="driver-regedit.png">
+				<figcaption>An example of correctly formatted registry entries.</figcaption>
+			</figure>
+			
+			<p>Finally, go up a directory (you should be in the <code>Restrictions</code> folder.)
+			Create a key titled <code>DenyDeviceIDs</code> with type <code>REG_DWORD</code> and value <code>1</code>.
+			Then create a key titled <code>DenyDeviceIDsRetroactive</code> with type <code>REG_DWORD</code> and value <code>1</code>.
+			If the keys already exist, just edit them, ensuring their types and values match the description above.
+			</p>
+			<p>Reboot your PC, uninstall the device driver one final time through device manager, and you're done!</p>
+		</article>
+	</div>
+</body>
